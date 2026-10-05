@@ -20,7 +20,7 @@ router.get("/:id", validarId, verificarValidaciones, async (req, res) => {
 
 router.post("/", validarAlumno, verificarValidaciones, async (req, res) => {
   let { nombre } = req.body;
-  nombre = nombre.trim().toLowerCase();
+  nombre = nombre.trim();
 
   const [existe] = await db.execute("SELECT * FROM alumnos WHERE LOWER(nombre)=?", [nombre]);
   if (existe.length > 0) {
@@ -34,7 +34,7 @@ router.post("/", validarAlumno, verificarValidaciones, async (req, res) => {
 router.put("/:id", [validarId, ...validarAlumno], verificarValidaciones, async (req, res) => {
   const id = Number(req.params.id);
   let { nombre } = req.body;
-  nombre = nombre.trim().toLowerCase();
+  nombre = nombre.trim();
 
   const [existe] = await db.execute("SELECT * FROM alumnos WHERE LOWER(nombre)=? AND id<>?", [nombre, id]);
   if (existe.length > 0) {
