@@ -33,7 +33,7 @@ router.get("/:id", validarId, verificarValidaciones, async (req, res) => {
 // POST crear tarea
 router.post("/", validarTarea, verificarValidaciones, async (req, res) => {
   let { nombre, completada } = req.body;
-  nombre = nombre.trim().toLowerCase(); // criterio de unicidad
+  nombre = nombre.trim(); // criterio de unicidad
 
   // Verificar unicidad
   const [existe] = await db.execute("SELECT * FROM tareas WHERE LOWER(nombre)=?", [nombre]);
@@ -53,10 +53,10 @@ router.post("/", validarTarea, verificarValidaciones, async (req, res) => {
 router.put("/:id", [validarId, ...validarTarea], verificarValidaciones, async (req, res) => {
   const id = Number(req.params.id);
   let { nombre, completada } = req.body;
-  nombre = nombre.trim().toLowerCase();
+  nombre = nombre.trim();
 
   // Verificar unicidad (excepto la misma tarea)
-  const [existe] = await db.execute("SELECT * FROM tareas WHERE LOWER(nombre)=? AND id<>?", [nombre, id]);
+  const [existe] = await db.execute("SELECT * FROM tareas WHERE nombre=? AND id<>?", [nombre, id]);
   if (existe.length > 0) {
     return res.status(400).json({ mensaje: "Ya existe otra tarea con ese nombre" });
   }
